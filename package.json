@@ -19,6 +19,8 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "git-commit-msg-linter": "^5.0.8",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.9",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.3.0"
   }
