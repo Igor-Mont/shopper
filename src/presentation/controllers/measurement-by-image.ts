@@ -1,9 +1,13 @@
-import { InvalidParamError, MissingParamError } from './errors';
-import { invalidDataRequest, serverError } from './helpers/http-helper';
-import { Base64Validator, Controller, HttpRequest, HttpResponse } from './protocols';
+import { AddMeasureByImage } from '../../domain/usecases/add-measure-by-image';
+import { InvalidParamError, MissingParamError } from '../errors';
+import { invalidDataRequest, serverError } from '../helpers/http-helper';
+import { Base64Validator, Controller, HttpRequest, HttpResponse } from '../protocols';
 
 export class MeasurementByImageController implements Controller {
-  constructor(private readonly base64Validator: Base64Validator) {}
+  constructor(
+    private readonly base64Validator: Base64Validator,
+    private readonly addMeasureByImage: AddMeasureByImage,
+  ) {}
 
   handle(httpRequest: HttpRequest): HttpResponse {
     try {
@@ -16,8 +20,11 @@ export class MeasurementByImageController implements Controller {
         }
       }
 
+      const { image, customer_code, measure_datetime, measure_type } = requestBody;
       const isBase64Valid = this.base64Validator.isValid(requestBody.image);
       if (!isBase64Valid) return invalidDataRequest(new InvalidParamError('image'));
+
+      this.addMeasureByImage.add({ image, customer_code, measure_datetime, measure_type });
     } catch (error) {
       return serverError();
     }
