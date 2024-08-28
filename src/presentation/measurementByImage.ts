@@ -1,3 +1,4 @@
+import { MissingParamError } from './errors/missing-param-error';
 import { HttpRequest, HttpResponse, HttpResponseError } from './protocols/http';
 
 export class MeasurementByImageController {
@@ -5,7 +6,7 @@ export class MeasurementByImageController {
     if (!httpRequest.body.image) {
       const httpResponse: HttpResponseError = {
         error_code: 'INVALID_DATA',
-        error_description: new Error('Missing param: image'),
+        error_description: new MissingParamError('image'),
       };
       return httpResponse;
     }
@@ -13,7 +14,7 @@ export class MeasurementByImageController {
     if (!httpRequest.body.customer_code) {
       const httpResponse: HttpResponseError = {
         error_code: 'INVALID_DATA',
-        error_description: new Error('Missing param: customer_code'),
+        error_description: new MissingParamError('customer_code'),
       };
       return httpResponse;
     }
@@ -21,7 +22,7 @@ export class MeasurementByImageController {
     if (!httpRequest.body.measure_datetime) {
       const httpResponse: HttpResponseError = {
         error_code: 'INVALID_DATA',
-        error_description: new Error('Missing param: measure_datetime'),
+        error_description: new MissingParamError('measure_datetime'),
       };
       return httpResponse;
     }
@@ -29,7 +30,7 @@ export class MeasurementByImageController {
     if (!httpRequest.body.measure_type) {
       const httpResponse: HttpResponseError = {
         error_code: 'INVALID_DATA',
-        error_description: new Error('Missing param: measure_type'),
+        error_description: new MissingParamError('measure_type'),
       };
       return httpResponse;
     }

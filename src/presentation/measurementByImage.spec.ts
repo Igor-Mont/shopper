@@ -1,5 +1,5 @@
+import { MissingParamError } from './errors/missing-param-error';
 import { MeasurementByImageController } from './measurementByImage';
-
 describe('MeasurementByImage Controller', () => {
   test('Should return error_code "INVALID_DATA" if no image is provided', () => {
     const sut = new MeasurementByImageController();
@@ -12,7 +12,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new Error('Missing param: image'));
+    expect(httpResponse.error_description).toEqual(new MissingParamError('image'));
   });
 
   test('Should return error_code "INVALID_DATA" if no customer_code is provided', () => {
@@ -26,7 +26,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new Error('Missing param: customer_code'));
+    expect(httpResponse.error_description).toEqual(new MissingParamError('customer_code'));
   });
 
   test('Should return error_code "INVALID_DATA" if no measure_datetime is provided', () => {
@@ -40,7 +40,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new Error('Missing param: measure_datetime'));
+    expect(httpResponse.error_description).toEqual(new MissingParamError('measure_datetime'));
   });
 
   test('Should return error_code "INVALID_DATA" if no measure_type is provided', () => {
@@ -54,6 +54,6 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new Error('Missing param: measure_type'));
+    expect(httpResponse.error_description).toEqual(new MissingParamError('measure_type'));
   });
 });

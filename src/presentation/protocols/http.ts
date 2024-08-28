@@ -2,7 +2,7 @@ export type HttpResponseSuccess = any;
 
 export interface HttpResponseError {
   error_code: string;
-  error_description: string | Error;
+  error_description: Error;
 }
 
 export type HttpResponse = HttpResponseSuccess | HttpResponseError;
