@@ -7,14 +7,28 @@ interface SutTypes {
   base64ValidatorStub: Base64Validator;
 }
 
-const makeSut = (): SutTypes => {
+const makeBase64Validator = (): Base64Validator => {
   class Base64ValidatorStub implements Base64Validator {
     isValid(base64: string): boolean {
       return true;
     }
   }
 
-  const base64ValidatorStub = new Base64ValidatorStub();
+  return new Base64ValidatorStub();
+};
+
+const makeBase64ValidatorWithError = (): Base64Validator => {
+  class Base64ValidatorStub implements Base64Validator {
+    isValid(base64: string): boolean {
+      throw new Error();
+    }
+  }
+
+  return new Base64ValidatorStub();
+};
+
+const makeSut = (): SutTypes => {
+  const base64ValidatorStub = makeBase64Validator();
   const sut = new MeasurementByImageController(base64ValidatorStub);
   return {
     sut,
@@ -110,13 +124,7 @@ describe('MeasurementByImage Controller', () => {
   });
 
   test('Should return error_code "SERVER_ERROR" if Base64Validator throws', () => {
-    class Base64ValidatorStub implements Base64Validator {
-      isValid(base64: string): boolean {
-        throw new Error();
-      }
-    }
-
-    const base64ValidatorStub = new Base64ValidatorStub();
+    const base64ValidatorStub = makeBase64ValidatorWithError();
     const sut = new MeasurementByImageController(base64ValidatorStub);
     const httRequest = {
       body: {
