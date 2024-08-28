@@ -1,8 +1,11 @@
-import { MeasureByImageModel } from '../../domain/models/measure-by-image';
-import { AddMeasureByImage, AddMeasureByImageModel } from '../../domain/usecases/add-measure-by-image';
-import { InvalidParamError, MissingParamError, ServerError } from '../errors';
-import { Base64Validator } from '../protocols';
+import { InvalidParamError, MissingParamError, ServerError } from '../../errors';
 import { MeasurementByImageController } from './measurement-by-image';
+import {
+  MeasureByImageModel,
+  Base64Validator,
+  AddMeasureByImage,
+  AddMeasureByImageModel,
+} from './measurement-by-image-protocols';
 
 interface SutTypes {
   sut: MeasurementByImageController;
@@ -157,6 +160,24 @@ describe('MeasurementByImage Controller', () => {
   test('Should return error_code "SERVER_ERROR" if Base64Validator throws', () => {
     const { sut, base64ValidatorStub } = makeSut();
     jest.spyOn(base64ValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const httRequest = {
+      body: {
+        image: 'base64',
+        customer_code: 'any customer_code',
+        measure_datetime: 'any datetime',
+        measure_type: 'any',
+      },
+    };
+    const httpResponse = sut.handle(httRequest);
+    expect(httpResponse.error_code).toBe('SERVER_ERROR');
+    expect(httpResponse.error_description).toEqual(new ServerError());
+  });
+
+  test('Should return error_code "SERVER_ERROR" if AddMeasureByImage throws', () => {
+    const { sut, addMeasureByImageStub } = makeSut();
+    jest.spyOn(addMeasureByImageStub, 'add').mockImplementationOnce(() => {
       throw new Error();
     });
     const httRequest = {

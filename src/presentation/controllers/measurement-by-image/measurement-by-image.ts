@@ -1,7 +1,12 @@
-import { AddMeasureByImage } from '../../domain/usecases/add-measure-by-image';
-import { InvalidParamError, MissingParamError } from '../errors';
-import { invalidDataRequest, serverError } from '../helpers/http-helper';
-import { Base64Validator, Controller, HttpRequest, HttpResponse } from '../protocols';
+import { InvalidParamError, MissingParamError } from '../../errors';
+import { invalidDataRequest, serverError } from '../../helpers/http-helper';
+import {
+  Base64Validator,
+  Controller,
+  HttpRequest,
+  HttpResponse,
+  AddMeasureByImage,
+} from './measurement-by-image-protocols';
 
 export class MeasurementByImageController implements Controller {
   constructor(
