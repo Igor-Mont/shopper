@@ -17,16 +17,6 @@ const makeBase64Validator = (): Base64Validator => {
   return new Base64ValidatorStub();
 };
 
-const makeBase64ValidatorWithError = (): Base64Validator => {
-  class Base64ValidatorStub implements Base64Validator {
-    isValid(base64: string): boolean {
-      throw new Error();
-    }
-  }
-
-  return new Base64ValidatorStub();
-};
-
 const makeSut = (): SutTypes => {
   const base64ValidatorStub = makeBase64Validator();
   const sut = new MeasurementByImageController(base64ValidatorStub);
@@ -124,8 +114,10 @@ describe('MeasurementByImage Controller', () => {
   });
 
   test('Should return error_code "SERVER_ERROR" if Base64Validator throws', () => {
-    const base64ValidatorStub = makeBase64ValidatorWithError();
-    const sut = new MeasurementByImageController(base64ValidatorStub);
+    const { sut, base64ValidatorStub } = makeSut();
+    jest.spyOn(base64ValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error();
+    });
     const httRequest = {
       body: {
         image: 'base64',
