@@ -5,6 +5,11 @@
     "target": "ES2022",
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts", "jest-unit.config.ts", "jest-integration.config.ts"],
+  "include": [
+    "src/**/*.ts",
+    "jest-unit.config.ts",
+    "jest-integration.config.ts",
+    "src/utils/base64-validator-adapter..spects"
+  ],
   "exclude": ["node_modules"]
 }
