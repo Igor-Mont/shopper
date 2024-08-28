@@ -204,6 +204,7 @@ describe('MeasurementByImage Controller', () => {
       },
     };
     const httpResponse = sut.handle(httRequest);
+
     expect(httpResponse).toHaveProperty('image_url');
     expect(httpResponse).toHaveProperty('measure_value');
     expect(httpResponse).toHaveProperty('measure_uuid');
