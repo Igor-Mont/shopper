@@ -42,4 +42,18 @@ describe('MeasurementByImage Controller', () => {
     expect(httpResponse.error_code).toBe(400);
     expect(httpResponse.error_description).toEqual(new Error('Missing param: measure_datetime'));
   });
+
+  test('Should return 400 if no measure_type is provided', () => {
+    const sut = new MeasurementByImageController();
+    const httRequest = {
+      body: {
+        image: 'any base64',
+        customer_code: 'any customer_code',
+        measure_datetime: 'any datetime',
+      },
+    };
+    const httpResponse = sut.handle(httRequest);
+    expect(httpResponse.error_code).toBe(400);
+    expect(httpResponse.error_description).toEqual(new Error('Missing param: measure_type'));
+  });
 });
