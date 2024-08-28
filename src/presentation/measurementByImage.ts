@@ -20,5 +20,12 @@ export class MeasurementByImageController {
         error_description: new Error('Missing param: measure_datetime'),
       };
     }
+
+    if (!httpRequest.body.measure_type) {
+      return {
+        error_code: 400,
+        error_description: new Error('Missing param: measure_type'),
+      };
+    }
   }
 }
