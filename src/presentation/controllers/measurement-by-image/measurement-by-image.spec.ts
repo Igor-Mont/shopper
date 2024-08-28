@@ -192,4 +192,25 @@ describe('MeasurementByImage Controller', () => {
     expect(httpResponse.error_code).toBe('SERVER_ERROR');
     expect(httpResponse.error_description).toEqual(new ServerError());
   });
+
+  test('Should return success if valid data is provided', () => {
+    const { sut } = makeSut();
+    const httRequest = {
+      body: {
+        image: 'valid_base64',
+        customer_code: 'valid_customer_code',
+        measure_datetime: 'valid_datetime',
+        measure_type: 'valid',
+      },
+    };
+    const httpResponse = sut.handle(httRequest);
+    expect(httpResponse).toHaveProperty('image_url');
+    expect(httpResponse).toHaveProperty('measure_value');
+    expect(httpResponse).toHaveProperty('measure_uuid');
+    expect(httpResponse).toEqual({
+      image_url: 'valid_url',
+      measure_value: 1,
+      measure_uuid: 'uuid',
+    });
+  });
 });

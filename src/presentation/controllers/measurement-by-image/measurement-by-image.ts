@@ -29,7 +29,9 @@ export class MeasurementByImageController implements Controller {
       const isBase64Valid = this.base64Validator.isValid(requestBody.image);
       if (!isBase64Valid) return invalidDataRequest(new InvalidParamError('image'));
 
-      this.addMeasureByImage.add({ image, customer_code, measure_datetime, measure_type });
+      const measureByImage = this.addMeasureByImage.add({ image, customer_code, measure_datetime, measure_type });
+
+      return measureByImage;
     } catch (error) {
       return serverError();
     }
