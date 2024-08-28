@@ -13,5 +13,12 @@ export class MeasurementByImageController {
         error_description: new Error('Missing param: customer_code'),
       };
     }
+
+    if (!httpRequest.body.measure_datetime) {
+      return {
+        error_code: 400,
+        error_description: new Error('Missing param: measure_datetime'),
+      };
+    }
   }
 }
