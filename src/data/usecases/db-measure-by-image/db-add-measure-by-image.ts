@@ -6,7 +6,7 @@ export class DBAddMeasureByImage implements AddMeasureByImage {
   constructor(private readonly measurementAnalyzer: MeasurementAnalyzer) {}
 
   async add(addMeasureByImageModel: AddMeasureByImageModel): Promise<MeasureByImageModel> {
-    this.measurementAnalyzer.analyze('PROMPT', addMeasureByImageModel.image);
+    await this.measurementAnalyzer.analyze('PROMPT', addMeasureByImageModel.image);
     return new Promise((resolve) =>
       resolve({
         image_url: 'valid_url',
