@@ -1,8 +1,10 @@
 import { MissingParamError } from './errors/missing-param-error';
-import { MeasurementByImageController } from './measurementByImage';
+import { MeasurementByImageController } from './measurement-by-image';
+
+const makeSut = (): MeasurementByImageController => new MeasurementByImageController();
 describe('MeasurementByImage Controller', () => {
   test('Should return error_code "INVALID_DATA" if no image is provided', () => {
-    const sut = new MeasurementByImageController();
+    const sut = makeSut();
     const httRequest = {
       body: {
         customer_code: 'any customer_code',
@@ -16,7 +18,7 @@ describe('MeasurementByImage Controller', () => {
   });
 
   test('Should return error_code "INVALID_DATA" if no customer_code is provided', () => {
-    const sut = new MeasurementByImageController();
+    const sut = makeSut();
     const httRequest = {
       body: {
         image: 'any base64',
@@ -30,7 +32,7 @@ describe('MeasurementByImage Controller', () => {
   });
 
   test('Should return error_code "INVALID_DATA" if no measure_datetime is provided', () => {
-    const sut = new MeasurementByImageController();
+    const sut = makeSut();
     const httRequest = {
       body: {
         image: 'any base64',
@@ -44,7 +46,7 @@ describe('MeasurementByImage Controller', () => {
   });
 
   test('Should return error_code "INVALID_DATA" if no measure_type is provided', () => {
-    const sut = new MeasurementByImageController();
+    const sut = makeSut();
     const httRequest = {
       body: {
         image: 'any base64',
