@@ -7,9 +7,14 @@ jest.mock('validator', () => ({
     return true;
   },
 }));
+
+const makeSut = (): Base64ValidatorAdapter => {
+  return new Base64ValidatorAdapter();
+};
+
 describe('Base64Validator Adapter', () => {
   test('Should returns false if validator returns false', () => {
-    const sut = new Base64ValidatorAdapter();
+    const sut = makeSut();
     jest.spyOn(validator, 'isBase64').mockReturnValueOnce(false);
     const isBase64Valid = sut.isValid('invalid_base64');
 
@@ -17,9 +22,17 @@ describe('Base64Validator Adapter', () => {
   });
 
   test('Should returns true if validator returns true', () => {
-    const sut = new Base64ValidatorAdapter();
+    const sut = makeSut();
     const isBase64Valid = sut.isValid('valid_base64');
 
     expect(isBase64Valid).toBe(true);
+  });
+
+  test('Should call validator with correct base64', () => {
+    const sut = makeSut();
+    const isBase64Spy = jest.spyOn(validator, 'isBase64');
+    const isBase64Valid = sut.isValid('valid_base64');
+
+    expect(isBase64Spy).toHaveBeenCalledWith('valid_base64');
   });
 });
