@@ -1,8 +1,6 @@
-import { InvalidParamError } from './errors/invalid-param-error';
-import { MissingParamError } from './errors/missing-param-error';
-import { ServerError } from './errors/server-error';
+import { InvalidParamError, MissingParamError, ServerError } from './errors';
 import { MeasurementByImageController } from './measurement-by-image';
-import { Base64Validator } from './protocols/base64-validor';
+import { Base64Validator } from './protocols';
 
 interface SutTypes {
   sut: MeasurementByImageController;
