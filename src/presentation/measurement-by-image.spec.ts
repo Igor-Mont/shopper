@@ -1,5 +1,6 @@
 import { InvalidParamError } from './errors/invalid-param-error';
 import { MissingParamError } from './errors/missing-param-error';
+import { ServerError } from './errors/server-error';
 import { MeasurementByImageController } from './measurement-by-image';
 import { Base64Validator } from './protocols/base64-validor';
 
@@ -108,5 +109,27 @@ describe('MeasurementByImage Controller', () => {
     };
     sut.handle(httRequest);
     expect(isBase64ValidSpy).toHaveBeenCalledWith('valid_base64');
+  });
+
+  test('Should return error_code "SERVER_ERROR" if Base64Validator throws', () => {
+    class Base64ValidatorStub implements Base64Validator {
+      isValid(base64: string): boolean {
+        throw new Error();
+      }
+    }
+
+    const base64ValidatorStub = new Base64ValidatorStub();
+    const sut = new MeasurementByImageController(base64ValidatorStub);
+    const httRequest = {
+      body: {
+        image: 'base64',
+        customer_code: 'any customer_code',
+        measure_datetime: 'any datetime',
+        measure_type: 'any',
+      },
+    };
+    const httpResponse = sut.handle(httRequest);
+    expect(httpResponse.error_code).toBe('SERVER_ERROR');
+    expect(httpResponse.error_description).toEqual(new ServerError());
   });
 });
