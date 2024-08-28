@@ -8,5 +8,5 @@ export interface AddMeasureByImageModel {
 }
 
 export interface AddMeasureByImage {
-  add(addMeasureByImageModel: AddMeasureByImageModel): MeasureByImageModel;
+  add(addMeasureByImageModel: AddMeasureByImageModel): Promise<MeasureByImageModel>;
 }

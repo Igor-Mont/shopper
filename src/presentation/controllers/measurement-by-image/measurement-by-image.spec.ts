@@ -25,14 +25,14 @@ const makeBase64Validator = (): Base64Validator => {
 
 const makeAddMeasureByImageStub = (): AddMeasureByImage => {
   class AddMeasureByImageStub implements AddMeasureByImage {
-    add(addMeasureByImageModel: AddMeasureByImageModel): MeasureByImageModel {
+    async add(addMeasureByImageModel: AddMeasureByImageModel): Promise<MeasureByImageModel> {
       const fakeMeasure: MeasureByImageModel = {
         image_url: 'valid_url',
         measure_value: 1,
         measure_uuid: 'uuid',
       };
 
-      return fakeMeasure;
+      return new Promise((resolve) => resolve(fakeMeasure));
     }
   }
 
@@ -50,7 +50,7 @@ const makeSut = (): SutTypes => {
   };
 };
 describe('MeasurementByImage Controller', () => {
-  test('Should return error_code "INVALID_DATA" if no image is provided', () => {
+  test('Should return error_code "INVALID_DATA" if no image is provided', async () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
@@ -59,12 +59,12 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any measure_type',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
     expect(httpResponse.error_description).toEqual(new MissingParamError('image'));
   });
 
-  test('Should return error_code "INVALID_DATA" if no customer_code is provided', () => {
+  test('Should return error_code "INVALID_DATA" if no customer_code is provided', async () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
@@ -73,12 +73,12 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any measure_type',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
     expect(httpResponse.error_description).toEqual(new MissingParamError('customer_code'));
   });
 
-  test('Should return error_code "INVALID_DATA" if no measure_datetime is provided', () => {
+  test('Should return error_code "INVALID_DATA" if no measure_datetime is provided', async () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
@@ -87,12 +87,12 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any measure_type',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
     expect(httpResponse.error_description).toEqual(new MissingParamError('measure_datetime'));
   });
 
-  test('Should return error_code "INVALID_DATA" if no measure_type is provided', () => {
+  test('Should return error_code "INVALID_DATA" if no measure_type is provided', async () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
@@ -101,12 +101,12 @@ describe('MeasurementByImage Controller', () => {
         measure_datetime: 'any datetime',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
     expect(httpResponse.error_description).toEqual(new MissingParamError('measure_type'));
   });
 
-  test('Should return error_code "INVALID_DATA" if an invalid base64 is provided', () => {
+  test('Should return error_code "INVALID_DATA" if an invalid base64 is provided', async () => {
     const { sut, base64ValidatorStub } = makeSut();
     jest.spyOn(base64ValidatorStub, 'isValid').mockReturnValueOnce(false);
     const httRequest = {
@@ -117,12 +117,12 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
     expect(httpResponse.error_description).toEqual(new InvalidParamError('image'));
   });
 
-  test('Should call Base64Validator with correct base64', () => {
+  test('Should call Base64Validator with correct base64', async () => {
     const { sut, base64ValidatorStub } = makeSut();
     const isBase64ValidSpy = jest.spyOn(base64ValidatorStub, 'isValid');
     const httRequest = {
@@ -133,11 +133,11 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any',
       },
     };
-    sut.handle(httRequest);
+    await sut.handle(httRequest);
     expect(isBase64ValidSpy).toHaveBeenCalledWith('valid_base64');
   });
 
-  test('Should call AddMeasureByImage with correct values', () => {
+  test('Should call AddMeasureByImage with correct values', async () => {
     const { sut, addMeasureByImageStub } = makeSut();
     const addMeasureSpy = jest.spyOn(addMeasureByImageStub, 'add');
     const httRequest = {
@@ -148,7 +148,7 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any',
       },
     };
-    sut.handle(httRequest);
+    await sut.handle(httRequest);
     expect(addMeasureSpy).toHaveBeenCalledWith({
       image: 'valid_base64',
       customer_code: 'any customer_code',
@@ -157,7 +157,7 @@ describe('MeasurementByImage Controller', () => {
     });
   });
 
-  test('Should return error_code "SERVER_ERROR" if Base64Validator throws', () => {
+  test('Should return error_code "SERVER_ERROR" if Base64Validator throws', async () => {
     const { sut, base64ValidatorStub } = makeSut();
     jest.spyOn(base64ValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new Error();
@@ -170,12 +170,12 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('SERVER_ERROR');
     expect(httpResponse.error_description).toEqual(new ServerError());
   });
 
-  test('Should return error_code "SERVER_ERROR" if AddMeasureByImage throws', () => {
+  test('Should return error_code "SERVER_ERROR" if AddMeasureByImage throws', async () => {
     const { sut, addMeasureByImageStub } = makeSut();
     jest.spyOn(addMeasureByImageStub, 'add').mockImplementationOnce(() => {
       throw new Error();
@@ -188,12 +188,12 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'any',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('SERVER_ERROR');
     expect(httpResponse.error_description).toEqual(new ServerError());
   });
 
-  test('Should return success if valid data is provided', () => {
+  test('Should return success if valid data is provided', async () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
@@ -203,7 +203,7 @@ describe('MeasurementByImage Controller', () => {
         measure_type: 'valid',
       },
     };
-    const httpResponse = sut.handle(httRequest);
+    const httpResponse = await sut.handle(httRequest);
 
     expect(httpResponse).toHaveProperty('image_url');
     expect(httpResponse).toHaveProperty('measure_value');
