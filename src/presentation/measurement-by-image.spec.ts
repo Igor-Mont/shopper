@@ -84,7 +84,7 @@ describe('MeasurementByImage Controller', () => {
     jest.spyOn(base64ValidatorStub, 'isValid').mockReturnValueOnce(false);
     const httRequest = {
       body: {
-        image: 'invalid base64',
+        image: 'invalid_base64',
         customer_code: 'any customer_code',
         measure_datetime: 'any datetime',
         measure_type: 'any',
@@ -93,5 +93,20 @@ describe('MeasurementByImage Controller', () => {
     const httpResponse = sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
     expect(httpResponse.error_description).toEqual(new InvalidParamError('image'));
+  });
+
+  test('Should call Base64Validator with correct base64', () => {
+    const { sut, base64ValidatorStub } = makeSut();
+    const isBase64ValidSpy = jest.spyOn(base64ValidatorStub, 'isValid');
+    const httRequest = {
+      body: {
+        image: 'valid_base64',
+        customer_code: 'any customer_code',
+        measure_datetime: 'any datetime',
+        measure_type: 'any',
+      },
+    };
+    sut.handle(httRequest);
+    expect(isBase64ValidSpy).toHaveBeenCalledWith('valid_base64');
   });
 });
