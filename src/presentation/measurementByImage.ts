@@ -4,20 +4,12 @@ import { HttpRequest, HttpResponse } from './protocols/http';
 
 export class MeasurementByImageController {
   handle(httpRequest: HttpRequest): HttpResponse {
-    if (!httpRequest.body.image) {
-      return invalidDataRequest(new MissingParamError('image'));
-    }
+    const requiredFields = ['image', 'customer_code', 'measure_datetime', 'measure_type'];
 
-    if (!httpRequest.body.customer_code) {
-      return invalidDataRequest(new MissingParamError('customer_code'));
-    }
-
-    if (!httpRequest.body.measure_datetime) {
-      return invalidDataRequest(new MissingParamError('measure_datetime'));
-    }
-
-    if (!httpRequest.body.measure_type) {
-      return invalidDataRequest(new MissingParamError('measure_type'));
+    for (const field of requiredFields) {
+      if (!httpRequest.body[field]) {
+        return invalidDataRequest(new MissingParamError(field));
+      }
     }
   }
 }
