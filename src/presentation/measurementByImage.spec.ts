@@ -14,4 +14,18 @@ describe('MeasurementByImage Controller', () => {
     expect(httpResponse.error_code).toBe(400);
     expect(httpResponse.error_description).toEqual(new Error('Missing param: image'));
   });
+
+  test('Should return 400 if no customer_code is provided', () => {
+    const sut = new MeasurementByImageController();
+    const httRequest = {
+      body: {
+        image: 'any base64',
+        measure_datetime: 'any datetime',
+        measure_type: 'any measure_type',
+      },
+    };
+    const httpResponse = sut.handle(httRequest);
+    expect(httpResponse.error_code).toBe(400);
+    expect(httpResponse.error_description).toEqual(new Error('Missing param: customer_code'));
+  });
 });
