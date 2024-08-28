@@ -12,5 +12,6 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = sut.handle(httRequest);
     expect(httpResponse.error_code).toBe(400);
+    expect(httpResponse.error_description).toEqual(new Error('Missing param: image'));
   });
 });
