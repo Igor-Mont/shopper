@@ -1,38 +1,23 @@
 import { MissingParamError } from './errors/missing-param-error';
-import { HttpRequest, HttpResponse, HttpResponseError } from './protocols/http';
+import { invalidDataRequest } from './helpers/http-helper';
+import { HttpRequest, HttpResponse } from './protocols/http';
 
 export class MeasurementByImageController {
   handle(httpRequest: HttpRequest): HttpResponse {
     if (!httpRequest.body.image) {
-      const httpResponse: HttpResponseError = {
-        error_code: 'INVALID_DATA',
-        error_description: new MissingParamError('image'),
-      };
-      return httpResponse;
+      return invalidDataRequest(new MissingParamError('image'));
     }
 
     if (!httpRequest.body.customer_code) {
-      const httpResponse: HttpResponseError = {
-        error_code: 'INVALID_DATA',
-        error_description: new MissingParamError('customer_code'),
-      };
-      return httpResponse;
+      return invalidDataRequest(new MissingParamError('customer_code'));
     }
 
     if (!httpRequest.body.measure_datetime) {
-      const httpResponse: HttpResponseError = {
-        error_code: 'INVALID_DATA',
-        error_description: new MissingParamError('measure_datetime'),
-      };
-      return httpResponse;
+      return invalidDataRequest(new MissingParamError('measure_datetime'));
     }
 
     if (!httpRequest.body.measure_type) {
-      const httpResponse: HttpResponseError = {
-        error_code: 'INVALID_DATA',
-        error_description: new MissingParamError('measure_type'),
-      };
-      return httpResponse;
+      return invalidDataRequest(new MissingParamError('measure_type'));
     }
   }
 }
