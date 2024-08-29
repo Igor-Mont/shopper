@@ -16,19 +16,13 @@ export class DBAddMeasureByImage implements AddMeasureByImage {
     measure_type,
   }: AddMeasureByImageModel): Promise<MeasureByImageModel> {
     const measureValue = await this.measurementAnalyzer.analyze('PROMPT', image);
-    await this.addMeasureByImageRepository.add({
+    const addedMeasure = await this.addMeasureByImageRepository.add({
       customer_code,
       image_url: 'valid_url',
       measure_datetime,
       measure_type,
       measure_value: measureValue,
     });
-    return new Promise((resolve) =>
-      resolve({
-        image_url: 'valid_url',
-        measure_uuid: 'uuid',
-        measure_value: 10,
-      }),
-    );
+    return addedMeasure;
   }
 }
