@@ -1,11 +1,30 @@
+import { MeasureByImageModel } from '../../../domain/models/measure-by-image';
 import { AddMeasureByImageModel } from '../../../domain/usecases/add-measure-by-image';
+import { AddMeasureByImageDTO, AddMeasureByImageRepository } from '../../protocols/add-measure-by-image-repository';
 import { MeasurementAnalyzer } from '../../protocols/measurement-analyzer';
 import { DBAddMeasureByImage } from './db-add-measure-by-image';
 
 export interface SutTypes {
   sut: DBAddMeasureByImage;
   measurementAnalyzerStub: MeasurementAnalyzer;
+  addMeasureByImageRepositoryStub: AddMeasureByImageRepository;
 }
+
+const makeAddMeasureByImageRepository = (): AddMeasureByImageRepository => {
+  class AddMeasureByImageRepositoryStub implements AddMeasureByImageRepository {
+    async add(addMeasureByImageDTO: AddMeasureByImageDTO): Promise<MeasureByImageModel> {
+      const fakeMeasure = {
+        image_url: 'valid_url',
+        measure_uuid: 'uuid',
+        measure_value: 10,
+      };
+
+      return new Promise((resolve) => resolve(fakeMeasure));
+    }
+  }
+
+  return new AddMeasureByImageRepositoryStub();
+};
 
 const makeMeasurementAnalyzer = (): MeasurementAnalyzer => {
   class MeasurementAnalyzerStub implements MeasurementAnalyzer {
@@ -18,12 +37,14 @@ const makeMeasurementAnalyzer = (): MeasurementAnalyzer => {
 };
 
 const makeSut = (): SutTypes => {
+  const addMeasureByImageRepositoryStub = makeAddMeasureByImageRepository();
   const measurementAnalyzerStub = makeMeasurementAnalyzer();
-  const sut = new DBAddMeasureByImage(measurementAnalyzerStub);
+  const sut = new DBAddMeasureByImage(measurementAnalyzerStub, addMeasureByImageRepositoryStub);
 
   return {
     sut,
     measurementAnalyzerStub,
+    addMeasureByImageRepositoryStub,
   };
 };
 
@@ -54,5 +75,55 @@ describe('DBMeasureByImage Usecase', () => {
     };
     const analyzePromise = sut.add(addMeasureByImage);
     await expect(analyzePromise).rejects.toThrow();
+  });
+
+  test('Should call AddMeasureByImageRepository with correct values', async () => {
+    const { sut, addMeasureByImageRepositoryStub } = makeSut();
+    const addSpy = jest.spyOn(addMeasureByImageRepositoryStub, 'add');
+    const addMeasureByImage: AddMeasureByImageModel = {
+      image: 'valid_base64',
+      customer_code: 'valid_customer_code',
+      measure_datetime: 'valid_datetime',
+      measure_type: 'valid_type',
+    };
+    await sut.add(addMeasureByImage);
+    expect(addSpy).toHaveBeenCalledWith({
+      image_url: 'valid_url',
+      customer_code: 'valid_customer_code',
+      measure_datetime: 'valid_datetime',
+      measure_type: 'valid_type',
+      measure_value: 10,
+    });
+  });
+
+  test('Should throws if AddMeasureByImageRepository throws', async () => {
+    const { sut, addMeasureByImageRepositoryStub } = makeSut();
+    jest
+      .spyOn(addMeasureByImageRepositoryStub, 'add')
+      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+    const addMeasureByImage: AddMeasureByImageModel = {
+      image: 'valid_base64',
+      customer_code: 'valid_customer_code',
+      measure_datetime: 'valid_datetime',
+      measure_type: 'valid_type',
+    };
+    const addPromise = sut.add(addMeasureByImage);
+    await expect(addPromise).rejects.toThrow();
+  });
+
+  test('Should return an measure on success', async () => {
+    const { sut, addMeasureByImageRepositoryStub } = makeSut();
+    const addMeasureByImage: AddMeasureByImageModel = {
+      image: 'valid_base64',
+      customer_code: 'valid_customer_code',
+      measure_datetime: 'valid_datetime',
+      measure_type: 'valid_type',
+    };
+    const account = await sut.add(addMeasureByImage);
+    expect(account).toEqual({
+      image_url: 'valid_url',
+      measure_uuid: 'uuid',
+      measure_value: 10,
+    });
   });
 });
