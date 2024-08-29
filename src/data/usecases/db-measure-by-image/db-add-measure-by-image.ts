@@ -1,7 +1,10 @@
-import { MeasureByImageModel } from '../../../domain/models/measure-by-image';
-import { AddMeasureByImage, AddMeasureByImageModel } from '../../../domain/usecases/add-measure-by-image';
-import { AddMeasureByImageRepository } from '../../protocols/add-measure-by-image-repository';
-import { MeasurementAnalyzer } from '../../protocols/measurement-analyzer';
+import {
+  AddMeasureByImage,
+  AddMeasureByImageModel,
+  AddMeasureByImageRepository,
+  MeasureByImageModel,
+  MeasurementAnalyzer,
+} from './db-add-measure-by-image-protocols';
 
 export class DBAddMeasureByImage implements AddMeasureByImage {
   constructor(

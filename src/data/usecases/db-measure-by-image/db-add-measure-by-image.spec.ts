@@ -1,8 +1,11 @@
-import { MeasureByImageModel } from '../../../domain/models/measure-by-image';
-import { AddMeasureByImageModel } from '../../../domain/usecases/add-measure-by-image';
-import { AddMeasureByImageDTO, AddMeasureByImageRepository } from '../../protocols/add-measure-by-image-repository';
-import { MeasurementAnalyzer } from '../../protocols/measurement-analyzer';
 import { DBAddMeasureByImage } from './db-add-measure-by-image';
+import {
+  MeasureByImageModel,
+  MeasurementAnalyzer,
+  AddMeasureByImageDTO,
+  AddMeasureByImageRepository,
+  AddMeasureByImageModel,
+} from './db-add-measure-by-image-protocols';
 
 export interface SutTypes {
   sut: DBAddMeasureByImage;
