@@ -1,7 +1,8 @@
 import { Router } from 'express';
 
+import { adaptRoute } from '../adapters/express-route-adapter';
+import { makeMeasurementByImageController } from '../factories/measurement-by-image';
+
 export default (router: Router): void => {
-  router.post('/upload', (req, res) => {
-    return res.send({ teste: 'asd' });
-  });
+  router.post('/upload', adaptRoute(makeMeasurementByImageController()));
 };
