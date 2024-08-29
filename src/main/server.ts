@@ -1,5 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
 
+import { mongoHelper } from '../infra/db/mongodb/helpers/mongo-helper';
+import env from './config/env';
+import setupRoutes from './config/routes';
+
 const app = express();
 
 const cors = (req: Request, res: Response, next: NextFunction): void => {
@@ -18,5 +22,13 @@ app.use(express.json());
 app.use(cors);
 app.use(contentType);
 
-//eslint-disable-next-line
-app.listen(8080, () => console.log('Server is running on port 8080 🔥'));
+setupRoutes(app);
+
+mongoHelper
+  .connect(env.mongoUrl)
+  .then(() => {
+    const port = env.port;
+    //eslint-disable-next-line
+    app.listen(port, () => console.log(`Server is running on port ${port} 🔥`));
+  })
+  .catch(console.error);
