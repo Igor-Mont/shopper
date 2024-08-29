@@ -16,7 +16,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@shelf/jest-mongodb": "^4.3.2",
     "@types/jest": "^29.5.12",
+    "@types/mongodb": "^4.0.7",
     "@types/node": "^22.5.0",
     "@types/validator": "^13.12.1",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -36,6 +38,8 @@
     "typescript-eslint": "^8.3.0"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.17.1",
+    "mongodb": "^6.8.0",
     "validator": "^13.12.0"
   }
 }
