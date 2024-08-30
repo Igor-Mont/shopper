@@ -3,9 +3,11 @@ import { Request, Response } from 'express';
 import { Controller, HttpRequest } from '../../presentation/protocols';
 
 export const adaptRoute = (controller: Controller) => {
-  return async ({ body }: Request, res: Response) => {
+  return async ({ body, params, query }: Request, res: Response) => {
     const httpRequest: HttpRequest = {
       body,
+      params,
+      query,
     };
 
     const response = await controller.handle(httpRequest);
@@ -15,6 +17,7 @@ export const adaptRoute = (controller: Controller) => {
       SERVER_ERROR: 500,
       DOUBLE_REPORT: 409,
       MEASURE_NOT_FOUND: 404,
+      MEASURES_NOT_FOUND: 404,
       CONFIRMATION_DUPLICATE: 409,
     };
 
