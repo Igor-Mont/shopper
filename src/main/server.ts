@@ -18,7 +18,7 @@ const contentType = (req: Request, res: Response, next: NextFunction): void => {
   return next();
 };
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(cors);
 app.use(contentType);
 

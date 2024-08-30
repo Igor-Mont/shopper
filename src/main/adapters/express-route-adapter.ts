@@ -17,6 +17,6 @@ export const adaptRoute = (controller: Controller) => {
 
     if (response.error_code) return res.status(mapErrorCode[response.error_code]).json(response);
 
-    return response;
+    return res.status(200).json(response);
   };
 };

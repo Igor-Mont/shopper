@@ -30,7 +30,6 @@ export class MeasurementByImageController implements Controller {
       if (!isBase64Valid) return invalidDataRequest(new InvalidParamError('image'));
 
       const measureByImage = await this.addMeasureByImage.add({ image, customer_code, measure_datetime, measure_type });
-
       return measureByImage;
     } catch (error) {
       return serverError();
