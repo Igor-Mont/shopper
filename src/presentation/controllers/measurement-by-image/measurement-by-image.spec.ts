@@ -7,6 +7,9 @@ import {
   AddMeasureByImageModel,
 } from './measurement-by-image-protocols';
 
+const valid_base64 =
+  'iVBORw0KGgoAAAANSUhEUgAAAB8AAAAWCAYAAAA4oUfxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKVSURBVEhL7ZVdSFNRAMd/+bE1VJaZmuKuztxYD0tW4kMJQqGRvghlUFpgTyH1UPkW9PWaEUhCUFRg9GEo1UOfKPggSJQzlviRHzik5YbY0qXLm3W2e4wyYetpL/7gcu75n/+5f87nXaeY8n8SI+JkGRPWwmNClBsuiaTmCvKLFYw6UVVVAl4Xw02dBJ5rjjCldrY0lpPFOK6T7fh7pC4wtBxnx7YkfK+vM9QQCGtRjFyPsa0OR4lCStCDZ2QcjzeAPtuB41I1xlJpC9HlYuKVG1VnxnbKIkVB7W6sInhpuocxGRwicnhVEUqBHtXdyZuSe4zub2d030167gwwr1MoqFOkUUM9+4wht0qibQ+m+pCSRvoxByn4Gb/VzWLYpRE53JGNURS+Xieqpmhc/YD3m5jOzIwVHwkw09iNTyyV6cAuDI17saTBbM9TPHelRRJ5zS9WU1KlMD81zpdZqYWJJzlPLMW8k7clnSxIdZmExsMUl2VplRknvUeFx61Vl4l6txsyzWQV/PmI4ATZuApqk5MpMVWhAH/vu3+CQ0Q9cs/jK4yel1oUpDw8QaENFr7rWY8bV8Mj/F2yURL1yP+L+nKsNj2LIx30tX5kUWxM22k7Kycqcrjzk9inkL7d8Xfng6XY359h5xO7FCSKgumIHYPqFvfAAOrllwyOBEnMKyX3nF6aNOKNxtQL8n11Br0EywrJMlvIrjWjq7SwsaaI/AoLyXF+xm6/YK5PegWGa4fYmqPD13GfyRuhg/WD4NQi+jILm63p+F0DBCc1b+TwUOfWfqbtGSTl5rApPZWUDeLc+4YYbm7D17IkfQIx3YWVOcSLy6S/ZpTfLROf+Wo1k201kWafY+qBN9y29j+PCWvhMQB+ASMd1N79+9VQAAAAAElFTkSuQmCC';
+
 interface SutTypes {
   sut: MeasurementByImageController;
   base64ValidatorStub: Base64Validator;
@@ -55,8 +58,8 @@ describe('MeasurementByImage Controller', () => {
     const httRequest = {
       body: {
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
-        measure_type: 'any measure_type',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -68,9 +71,9 @@ describe('MeasurementByImage Controller', () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
-        image: 'any base64',
-        measure_datetime: 'any datetime',
-        measure_type: 'any measure_type',
+        image: valid_base64,
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -82,9 +85,9 @@ describe('MeasurementByImage Controller', () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
-        image: 'any base64',
+        image: valid_base64,
         customer_code: 'any customer_code',
-        measure_type: 'any measure_type',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -96,9 +99,9 @@ describe('MeasurementByImage Controller', () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
-        image: 'any base64',
+        image: valid_base64,
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
+        measure_datetime: '2026-10-29T15:30:00Z',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -113,8 +116,8 @@ describe('MeasurementByImage Controller', () => {
       body: {
         image: 'invalid_base64',
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
-        measure_type: 'any',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -122,19 +125,49 @@ describe('MeasurementByImage Controller', () => {
     expect(httpResponse.error_description).toEqual(new InvalidParamError('image'));
   });
 
+  test('Should return error_code "INVALID_DATA" if an invalid measure_type is provided', async () => {
+    const { sut } = makeSut();
+    const httRequest = {
+      body: {
+        image: 'invalid_base64',
+        customer_code: 'any customer_code',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'INVALID_MEASURE_TYPE',
+      },
+    };
+    const httpResponse = await sut.handle(httRequest);
+    expect(httpResponse.error_code).toBe('INVALID_DATA');
+    expect(httpResponse.error_description).toEqual(new InvalidParamError('measure_type'));
+  });
+
+  test('Should return error_code "INVALID_DATA" if an invalid measure_datetime is provided', async () => {
+    const { sut } = makeSut();
+    const httRequest = {
+      body: {
+        image: 'invalid_base64',
+        customer_code: 'any customer_code',
+        measure_datetime: 'INVALID_MEASURE_DATETIME',
+        measure_type: 'WATER',
+      },
+    };
+    const httpResponse = await sut.handle(httRequest);
+    expect(httpResponse.error_code).toBe('INVALID_DATA');
+    expect(httpResponse.error_description).toEqual(new InvalidParamError('measure_datetime'));
+  });
+
   test('Should call Base64Validator with correct base64', async () => {
     const { sut, base64ValidatorStub } = makeSut();
     const isBase64ValidSpy = jest.spyOn(base64ValidatorStub, 'isValid');
     const httRequest = {
       body: {
-        image: 'valid_base64',
+        image: valid_base64,
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
-        measure_type: 'any',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     await sut.handle(httRequest);
-    expect(isBase64ValidSpy).toHaveBeenCalledWith('valid_base64');
+    expect(isBase64ValidSpy).toHaveBeenCalledWith(valid_base64);
   });
 
   test('Should call AddMeasureByImage with correct values', async () => {
@@ -142,18 +175,18 @@ describe('MeasurementByImage Controller', () => {
     const addMeasureSpy = jest.spyOn(addMeasureByImageStub, 'add');
     const httRequest = {
       body: {
-        image: 'valid_base64',
+        image: valid_base64,
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
-        measure_type: 'any',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     await sut.handle(httRequest);
     expect(addMeasureSpy).toHaveBeenCalledWith({
-      image: 'valid_base64',
+      image: valid_base64,
       customer_code: 'any customer_code',
-      measure_datetime: 'any datetime',
-      measure_type: 'any',
+      measure_datetime: '2026-10-29T15:30:00Z',
+      measure_type: 'WATER',
     });
   });
 
@@ -166,8 +199,8 @@ describe('MeasurementByImage Controller', () => {
       body: {
         image: 'base64',
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
-        measure_type: 'any',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -184,8 +217,8 @@ describe('MeasurementByImage Controller', () => {
       body: {
         image: 'base64',
         customer_code: 'any customer_code',
-        measure_datetime: 'any datetime',
-        measure_type: 'any',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
@@ -197,10 +230,10 @@ describe('MeasurementByImage Controller', () => {
     const { sut } = makeSut();
     const httRequest = {
       body: {
-        image: 'valid_base64',
+        image: valid_base64,
         customer_code: 'valid_customer_code',
-        measure_datetime: 'valid_datetime',
-        measure_type: 'valid',
+        measure_datetime: '2026-10-29T15:30:00Z',
+        measure_type: 'WATER',
       },
     };
     const httpResponse = await sut.handle(httRequest);
