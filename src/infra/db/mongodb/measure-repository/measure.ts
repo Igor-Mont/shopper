@@ -27,7 +27,7 @@ export class MeasureRepository
   async add(addMeasureByImageDTO: AddMeasureByImageDTO): Promise<MeasureByImageModel> {
     const measurementsCollection = mongoHelper.getCollection('measurements');
     const uuid = randomUUID();
-    const urlViewMeasurement = `http://localhost:8080/view-measurement/${addMeasureByImageDTO.customer_code}/${uuid}`;
+    const urlViewMeasurement = `http://localhost/view-measurement/${addMeasureByImageDTO.customer_code}/${uuid}`;
     const { insertedId: id } = await measurementsCollection.insertOne({
       ...addMeasureByImageDTO,
       measure_uuid: uuid,
