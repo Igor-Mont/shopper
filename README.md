@@ -26,8 +26,8 @@
 ### Observações
 
 - É válido lembrar que para alguns requisitos pedidos no teste técnico foi preciso adaptar alguns recursos para suprir as interfaces de retorno.
-- Como não foi relatado o tipo de imagem que iria receber no endpoint pedi para o GEMINI capturar o valor e depois tiro os 3 dígitos finais pois a depender do medidor ele usa medidas diferentes, geralmente ficam em vermelho as medições em L, em algumas pesquisas vi que uns usam 2 dígitos e outros 3 dígitos então resolvi optar por remover os 3 útlimos.
-
+- Como não foi relatado o tipo de imagem que iria receber no endpoint pedi para o GEMINI capturar o valor e depois tiro os 3 dígitos finais pois a depender do medidor ele usa medidas diferentes, geralmente ficam em vermelho as medições em L, em algumas pesquisas vi que uns usam 2 dígitos e outros 3 dígitos então resolvi optar por remover os 3 útltimos.
+- O primeiro endpoint (POST /upload) foi feito baseado na metodologia TDD, o restante fiz sem tests por conta do tempo.
 - Duas imagens para teste que utilizei foram:
 
 <img width="220" src="./images/medidor1.png" />

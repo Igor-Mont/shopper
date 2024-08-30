@@ -46,8 +46,8 @@ export class DBAddMeasureByImage implements AddMeasureByImage {
     const measureValue = await this.measurementAnalyzer.analyze(prompt, image);
 
     const addedMeasure = await this.addMeasureByImageRepository.add({
+      image,
       customer_code,
-      image_url: 'valid_url',
       measure_datetime,
       measure_type,
       measure_value: measureValue,

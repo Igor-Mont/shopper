@@ -1,5 +1,5 @@
-import { Measure } from '../../domain/models/measure';
+import { MeasureWithoutBase64 } from '../../domain/models/measure';
 
 export interface FindMeasurementsRepository {
-  findById(measure_uuid: string): Promise<Measure | null>;
+  findById(measure_uuid: string): Promise<MeasureWithoutBase64 | null>;
 }

@@ -11,7 +11,7 @@ import {
 import { ConfirmMeasurementRepository } from '../../../../data/protocols/confirm-measurement-repository';
 import { FindMeasurementsRepository } from '../../../../data/protocols/find-measurements-repository';
 import { ListMeasurementsByCustomerRepository } from '../../../../data/protocols/list-measurements-by-customer-repository';
-import { Measure } from '../../../../domain/models/measure';
+import { Measure, MeasureWithoutBase64 } from '../../../../domain/models/measure';
 import { MeasureByImageModel } from '../../../../domain/models/measure-by-image';
 import { MeasureType } from '../../../../domain/models/measure-type';
 import { mongoHelper } from '../helpers/mongo-helper';
@@ -26,10 +26,13 @@ export class MeasureRepository
 {
   async add(addMeasureByImageDTO: AddMeasureByImageDTO): Promise<MeasureByImageModel> {
     const measurementsCollection = mongoHelper.getCollection('measurements');
+    const uuid = randomUUID();
+    const urlViewMeasurement = `http://localhost:8080/view-measurement/${addMeasureByImageDTO.customer_code}/${uuid}`;
     const { insertedId: id } = await measurementsCollection.insertOne({
       ...addMeasureByImageDTO,
-      measure_uuid: randomUUID(),
+      measure_uuid: uuid,
       has_confirmed: false,
+      image_url: urlViewMeasurement,
     });
     const result = await measurementsCollection.findOne({ _id: id });
 
@@ -57,7 +60,7 @@ export class MeasureRepository
     return measuresInMonth === 0;
   }
 
-  async findById(measure_uuid: string): Promise<Measure | null> {
+  async findById(measure_uuid: string): Promise<MeasureWithoutBase64 | null> {
     const measurementsCollection = mongoHelper.getCollection('measurements');
 
     const result = await measurementsCollection.findOne({ measure_uuid });
@@ -82,13 +85,14 @@ export class MeasureRepository
   }
 
   private mapDocumentToMeasureDomainModel(document: any): Measure {
-    const { has_confirmed, image_url, measure_datetime, measure_type, measure_uuid } = document;
+    const { has_confirmed, image_url, measure_datetime, measure_type, measure_uuid, image } = document;
     const measure: Measure = {
       has_confirmed,
       image_url,
       measure_datetime,
       measure_type,
       measure_uuid,
+      image,
     };
     return measure;
   }

@@ -23,6 +23,11 @@ export const adaptRoute = (controller: Controller) => {
 
     if (response.error_code) return res.status(mapErrorCode[response.error_code]).json(response);
 
+    if (typeof response === 'string') {
+      res.setHeader('Content-Type', 'image/png');
+      res.send(Buffer.from(response, 'base64'));
+    }
+
     return res.status(200).json(response);
   };
 };

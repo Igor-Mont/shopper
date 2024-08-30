@@ -125,7 +125,7 @@ describe('DBMeasureByImage Usecase', () => {
     };
     await sut.add(addMeasureByImage);
     expect(addSpy).toHaveBeenCalledWith({
-      image_url: 'valid_url',
+      image: valid_base64,
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
       measure_type: MeasureType.GAS,
