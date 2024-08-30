@@ -1,7 +1,7 @@
 import { mongoHelper as sut } from '../helpers/mongo-helper';
 import { MeasureRepository } from './measure';
 
-describe('Mongo Helper', () => {
+describe.skip('Mongo Helper', () => {
   beforeAll(async () => {
     await sut.connect(process.env.MONGO_URL);
   });

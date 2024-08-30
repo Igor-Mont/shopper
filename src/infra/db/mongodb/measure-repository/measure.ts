@@ -10,8 +10,10 @@ import {
 } from '../../../../data/protocols/checks-reading-in-month';
 import { ConfirmMeasurementRepository } from '../../../../data/protocols/confirm-measurement-repository';
 import { FindMeasurementsRepository } from '../../../../data/protocols/find-measurements-repository';
+import { ListMeasurementsByCustomerRepository } from '../../../../data/protocols/list-measurements-by-customer-repository';
 import { Measure } from '../../../../domain/models/measure';
 import { MeasureByImageModel } from '../../../../domain/models/measure-by-image';
+import { MeasureType } from '../../../../domain/models/measure-type';
 import { mongoHelper } from '../helpers/mongo-helper';
 
 export class MeasureRepository
@@ -19,7 +21,8 @@ export class MeasureRepository
     AddMeasureByImageRepository,
     ChecksReadingInMonthRepository,
     ConfirmMeasurementRepository,
-    FindMeasurementsRepository
+    FindMeasurementsRepository,
+    ListMeasurementsByCustomerRepository
 {
   async add(addMeasureByImageDTO: AddMeasureByImageDTO): Promise<MeasureByImageModel> {
     const measurementsCollection = mongoHelper.getCollection('measurements');
@@ -75,5 +78,35 @@ export class MeasureRepository
     const measurementsCollection = mongoHelper.getCollection('measurements');
 
     await measurementsCollection.updateOne({ measure_uuid }, { $set: { measure_value, has_confirmed: true } });
+  }
+
+  private mapDocumentToMeasureDomainModel(document: any): Measure {
+    const { has_confirmed, image_url, measure_datetime, measure_type, measure_uuid } = document;
+    const measure: Measure = {
+      has_confirmed,
+      image_url,
+      measure_datetime,
+      measure_type,
+      measure_uuid,
+    };
+    return measure;
+  }
+
+  async listMeasurementsByCustomer(customer_code: string, measure_type?: MeasureType): Promise<Measure[]> {
+    const measurementsCollection = mongoHelper.getCollection('measurements');
+
+    if (measure_type) {
+      const result = (await measurementsCollection.find({ customer_code, measure_type }).toArray()).map(
+        this.mapDocumentToMeasureDomainModel,
+      );
+
+      return result;
+    }
+
+    const result = (await measurementsCollection.find({ customer_code }).toArray()).map(
+      this.mapDocumentToMeasureDomainModel,
+    );
+
+    return result;
   }
 }
