@@ -15,9 +15,16 @@ export const serverError = (): HttpResponseError => {
   };
 };
 
-export const conflictError = ({ message }: Error): HttpResponseError => {
+export const conflictError = ({ message }: Error, error_code = 'DOUBLE_REPORT'): HttpResponseError => {
   return {
-    error_code: 'DOUBLE_REPORT',
+    error_code,
+    error_description: message,
+  };
+};
+
+export const notFoundError = ({ message }: Error): HttpResponseError => {
+  return {
+    error_code: 'MEASURE_NOT_FOUND',
     error_description: message,
   };
 };
