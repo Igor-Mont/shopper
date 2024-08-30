@@ -1,5 +1,60 @@
 ### Teste técnico SHOPPER
 
+### Para rodar o projeto
+
+1. Clone o projeto;
+2. Adicione a variável `GEMINI_API_KEY` ao arquivo `.env`
+3. Rode o docker (As versões utilizadas foram: Docker version 27.0.3 | Docker Compose version v2.28.1-desktop.1)
+
+```bash
+docker-compose up
+```
+
+### Endpoints
+
+- POST /upload
+
+Request body:
+
+```json
+{
+  "image": "BASE64",
+  "customer_code": "1",
+  "measure_datetime": "2018-11-29T15:30:00Z",
+  "measure_type": "WATER" // Ou GAS
+}
+```
+
+- POST /upload
+
+Request body:
+
+```json
+{
+  "image": "BASE64",
+  "customer_code": "1",
+  "measure_datetime": "2018-11-29T15:30:00Z",
+  "measure_type": "WATER" // Ou GAS
+}
+```
+
+- PATCH /confirm
+
+Request body:
+
+```json
+{
+  "measure_uuid": "944feba8-868f-4770-b7bc-899170236216",
+  "confirmed_value": 999999
+}
+```
+
+- GET /:customer_code/list
+
+Queryparams:
+
+- measure_type = "WATER" ou "GAS"
+
 #### Princípios utilizados
 
 - S.O.L.I.D
