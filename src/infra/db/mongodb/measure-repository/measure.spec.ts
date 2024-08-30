@@ -21,5 +21,8 @@ describe('Mongo Helper', () => {
     });
 
     expect(measure).toBeTruthy();
+    expect(measure).toHaveProperty('measure_uuid');
+    expect(measure).toHaveProperty('measure_value');
+    expect(measure).toHaveProperty('image_url');
   });
 });

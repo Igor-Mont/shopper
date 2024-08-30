@@ -16,12 +16,18 @@ export class MeasureRepository implements AddMeasureByImageRepository, ChecksRea
     const measurementsCollection = mongoHelper.getCollection('measurements');
     const { insertedId: id } = await measurementsCollection.insertOne({
       ...addMeasureByImageDTO,
-      id: randomUUID(),
+      measure_uuid: randomUUID(),
       has_confirmed: false,
     });
     const result = await measurementsCollection.findOne({ _id: id });
 
-    return mongoHelper.map(result);
+    const { measure_uuid, image_url, measure_value } = mongoHelper.map(result);
+
+    return {
+      image_url,
+      measure_value,
+      measure_uuid,
+    } as MeasureByImageModel;
   }
 
   async check({ customer_code, measure_datetime }: ChecksReadingInMonthDTO): Promise<boolean> {
