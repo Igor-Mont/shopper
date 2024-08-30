@@ -14,6 +14,8 @@ export const adaptRoute = (controller: Controller) => {
       INVALID_DATA: 400,
       SERVER_ERROR: 500,
       DOUBLE_REPORT: 409,
+      MEASURE_NOT_FOUND: 404,
+      CONFIRMATION_DUPLICATE: 409,
     };
 
     if (response.error_code) return res.status(mapErrorCode[response.error_code]).json(response);
