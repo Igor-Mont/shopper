@@ -13,6 +13,7 @@ export const adaptRoute = (controller: Controller) => {
     const mapErrorCode = {
       INVALID_DATA: 400,
       SERVER_ERROR: 500,
+      DOUBLE_REPORT: 409,
     };
 
     if (response.error_code) return res.status(mapErrorCode[response.error_code]).json(response);

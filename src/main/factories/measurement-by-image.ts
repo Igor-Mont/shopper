@@ -8,7 +8,7 @@ export const makeMeasurementByImageController = (): MeasurementByImageController
   const base64ValidatorAdpter = new Base64ValidatorAdapter();
   const geminiVisionAdapter = new GeminiVisionAdapter();
   const measureRepository = new MeasureRepository();
-  const dbAddMeasureByImage = new DBAddMeasureByImage(geminiVisionAdapter, measureRepository);
+  const dbAddMeasureByImage = new DBAddMeasureByImage(geminiVisionAdapter, measureRepository, measureRepository);
   const measurementByImageController = new MeasurementByImageController(base64ValidatorAdpter, dbAddMeasureByImage);
   return measurementByImageController;
 };

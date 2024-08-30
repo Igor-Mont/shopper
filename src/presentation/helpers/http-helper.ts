@@ -14,3 +14,10 @@ export const serverError = (): HttpResponseError => {
     error_description: new ServerError(),
   };
 };
+
+export const conflictError = ({ message }: Error): HttpResponseError => {
+  return {
+    error_code: 'DOUBLE_REPORT',
+    error_description: message,
+  };
+};

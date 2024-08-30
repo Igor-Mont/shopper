@@ -1,3 +1,5 @@
+import { ConflictError } from '../../errors/conflict-error';
+import { ChecksReadingInMonthRepository } from '../../protocols/checks-reading-in-month';
 import {
   AddMeasureByImage,
   AddMeasureByImageModel,
@@ -10,6 +12,7 @@ export class DBAddMeasureByImage implements AddMeasureByImage {
   constructor(
     private readonly measurementAnalyzer: MeasurementAnalyzer,
     private readonly addMeasureByImageRepository: AddMeasureByImageRepository,
+    private readonly checksReadingInMonthRepository: ChecksReadingInMonthRepository,
   ) {}
 
   async add({
@@ -18,6 +21,10 @@ export class DBAddMeasureByImage implements AddMeasureByImage {
     measure_datetime,
     measure_type,
   }: AddMeasureByImageModel): Promise<MeasureByImageModel> {
+    const canReadThisMonth = await this.checksReadingInMonthRepository.check({ customer_code, measure_datetime });
+
+    if (!canReadThisMonth) throw new ConflictError('Leitura do mês já realizada.');
+
     const prompt = `
       Nossa tarefa é extrair e interpretar informações de consumo de água e gás a partir de fotos de medidores. Para garantir a precisão da medição, siga as instruções abaixo:
       Identificação do Medidor:
