@@ -6,6 +6,7 @@ import {
   AddMeasureByImageDTO,
   AddMeasureByImageRepository,
   AddMeasureByImageModel,
+  MeasureType,
 } from './db-add-measure-by-image-protocols';
 
 const valid_base64 =
@@ -78,7 +79,7 @@ describe('DBMeasureByImage Usecase', () => {
       image: valid_base64,
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
-      measure_type: 'GAS',
+      measure_type: MeasureType.GAS,
     };
     await sut.add(addMeasureByImage);
     const prompt = `
@@ -107,7 +108,7 @@ describe('DBMeasureByImage Usecase', () => {
       image: valid_base64,
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
-      measure_type: 'GAS',
+      measure_type: MeasureType.GAS,
     };
     const analyzePromise = sut.add(addMeasureByImage);
     await expect(analyzePromise).rejects.toThrow();
@@ -120,14 +121,14 @@ describe('DBMeasureByImage Usecase', () => {
       image: valid_base64,
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
-      measure_type: 'GAS',
+      measure_type: MeasureType.GAS,
     };
     await sut.add(addMeasureByImage);
     expect(addSpy).toHaveBeenCalledWith({
       image_url: 'valid_url',
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
-      measure_type: 'GAS',
+      measure_type: MeasureType.GAS,
       measure_value: 10,
     });
   });
@@ -141,7 +142,7 @@ describe('DBMeasureByImage Usecase', () => {
       image: valid_base64,
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
-      measure_type: 'GAS',
+      measure_type: MeasureType.GAS,
     };
     const addPromise = sut.add(addMeasureByImage);
     await expect(addPromise).rejects.toThrow();
@@ -153,7 +154,7 @@ describe('DBMeasureByImage Usecase', () => {
       image: valid_base64,
       customer_code: 'valid_customer_code',
       measure_datetime: 'valid_datetime',
-      measure_type: 'GAS',
+      measure_type: MeasureType.GAS,
     };
     const account = await sut.add(addMeasureByImage);
     expect(account).toEqual({

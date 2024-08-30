@@ -42,15 +42,16 @@ export class MeasureRepository
     } as MeasureByImageModel;
   }
 
-  async check({ customer_code, measure_datetime }: ChecksReadingInMonthDTO): Promise<boolean> {
+  async check({ customer_code, measure_datetime, measure_type }: ChecksReadingInMonthDTO): Promise<boolean> {
     const measurementsCollection = mongoHelper.getCollection('measurements');
 
     const measuresInMonth = (await measurementsCollection.find().toArray()).filter((measure) => {
       const sameCustomerCode = measure.customer_code === customer_code;
+      const sameMeasureType = measure.measure_type === measure_type;
       const targetDate = new Date(measure.measure_datetime);
       const sameMonth = targetDate.getMonth() === new Date(measure_datetime).getMonth();
       const sameYear = targetDate.getFullYear() === new Date(measure_datetime).getFullYear();
-      return sameCustomerCode && sameMonth && sameYear;
+      return sameCustomerCode && sameMonth && sameYear && sameMeasureType;
     }).length;
 
     return measuresInMonth === 0;
