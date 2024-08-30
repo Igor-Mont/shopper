@@ -1,4 +1,4 @@
-import { InvalidParamError, MissingParamError, ServerError } from '../../errors';
+import { ServerError } from '../../errors';
 import { MeasurementByImageController } from './measurement-by-image';
 import {
   MeasureByImageModel,
@@ -64,7 +64,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new MissingParamError('image'));
+    expect(httpResponse.error_description).toBe('Missing param: image');
   });
 
   test('Should return error_code "INVALID_DATA" if no customer_code is provided', async () => {
@@ -78,7 +78,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new MissingParamError('customer_code'));
+    expect(httpResponse.error_description).toBe('Missing param: customer_code');
   });
 
   test('Should return error_code "INVALID_DATA" if no measure_datetime is provided', async () => {
@@ -92,7 +92,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new MissingParamError('measure_datetime'));
+    expect(httpResponse.error_description).toBe('Missing param: measure_datetime');
   });
 
   test('Should return error_code "INVALID_DATA" if no measure_type is provided', async () => {
@@ -106,7 +106,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new MissingParamError('measure_type'));
+    expect(httpResponse.error_description).toBe('Missing param: measure_type');
   });
 
   test('Should return error_code "INVALID_DATA" if an invalid base64 is provided', async () => {
@@ -122,7 +122,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new InvalidParamError('image'));
+    expect(httpResponse.error_description).toBe('Invalid param: image');
   });
 
   test('Should return error_code "INVALID_DATA" if an invalid measure_type is provided', async () => {
@@ -137,7 +137,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new InvalidParamError('measure_type'));
+    expect(httpResponse.error_description).toBe('Invalid param: measure_type');
   });
 
   test('Should return error_code "INVALID_DATA" if an invalid measure_datetime is provided', async () => {
@@ -152,7 +152,7 @@ describe('MeasurementByImage Controller', () => {
     };
     const httpResponse = await sut.handle(httRequest);
     expect(httpResponse.error_code).toBe('INVALID_DATA');
-    expect(httpResponse.error_description).toEqual(new InvalidParamError('measure_datetime'));
+    expect(httpResponse.error_description).toBe('Invalid param: measure_datetime');
   });
 
   test('Should call Base64Validator with correct base64', async () => {

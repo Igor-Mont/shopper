@@ -4,7 +4,7 @@ import { HttpResponseError } from '../protocols/http';
 export const invalidDataRequest = (error: Error): HttpResponseError => {
   return {
     error_code: 'INVALID_DATA',
-    error_description: error,
+    error_description: error.message,
   };
 };
 
@@ -22,9 +22,9 @@ export const conflictError = ({ message }: Error, error_code = 'DOUBLE_REPORT'):
   };
 };
 
-export const notFoundError = ({ message }: Error): HttpResponseError => {
+export const notFoundError = ({ message }: Error, error_code = 'MEASURE_NOT_FOUND'): HttpResponseError => {
   return {
-    error_code: 'MEASURE_NOT_FOUND',
+    error_code,
     error_description: message,
   };
 };
